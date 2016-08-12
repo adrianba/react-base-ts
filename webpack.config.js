@@ -1,7 +1,11 @@
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
     entry: "./src/index.tsx",
     output: {
-        filename: "./dist/bundle.js",
+        filename: "bundle.js",
+        path: "./dist"
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -24,12 +28,28 @@ module.exports = {
         ]
     },
 
+    plugins: [
+        new HtmlWebpackPlugin({
+        template: './src/index.html',
+        filename: 'index.html',
+        inject: 'body'
+        }),
+        new CopyWebpackPlugin([
+          { context: './node_modules/bootstrap/dist/css/', from: '*.min.css', to: '.' },
+          { from: './node_modules/bootstrap/dist/fonts', to: './fonts' },
+          { from: './node_modules/react/dist/react.js', to: '.' },
+          { from: './node_modules/react-dom/dist/react-dom.js', to: '.' },
+          { from: './node_modules/react-bootstrap/dist/react-bootstrap.js', to: '.' }
+        ])
+    ],
+
     // When importing a module whose path matches one of the following, just
     // assume a corresponding global variable exists and use that instead.
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
         "react": "React",
-        "react-dom": "ReactDOM"
+        "react-dom": "ReactDOM",
+        "react-bootstrap": "ReactBootstrap"
     },
 };
